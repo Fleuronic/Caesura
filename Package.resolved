@@ -1,0 +1,104 @@
+{
+  "pins" : [
+    {
+      "identity" : "catena",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Fleuronic/Catena",
+      "state" : {
+        "branch" : "main",
+        "revision" : "681be25be987a63d858c6c952d239ed85a5c1b43"
+      }
+    },
+    {
+      "identity" : "catenary",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Fleuronic/Catenary",
+      "state" : {
+        "branch" : "main",
+        "revision" : "1579207f71c850c5d296cf2bdb9660f18a785453"
+      }
+    },
+    {
+      "identity" : "catenoid",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Fleuronic/Catenoid",
+      "state" : {
+        "branch" : "main",
+        "revision" : "81a13203a8e6f1bb7228ea31bf32726ed5a999e1"
+      }
+    },
+    {
+      "identity" : "differ",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tonyarnold/Differ",
+      "state" : {
+        "revision" : "5520fda947f1f9777a806389c2ba587219bc0538",
+        "version" : "1.4.6"
+      }
+    },
+    {
+      "identity" : "identity",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jordanekay/Identity",
+      "state" : {
+        "branch" : "master",
+        "revision" : "8764a54c8e5ef0d14f3dc2ec5c10223ed0411a4d"
+      }
+    },
+    {
+      "identity" : "papyrus",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jordanekay/papyrus",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ff604d6cca47a31a3e27588f6c5c155664175cb2"
+      }
+    },
+    {
+      "identity" : "persistdb",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jordanekay/PersistDB",
+      "state" : {
+        "branch" : "master",
+        "revision" : "1fcce3a2e8d5ff8dcd52ab60a743bc0fb9f06c78"
+      }
+    },
+    {
+      "identity" : "reactiveswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveCocoa/ReactiveSwift.git",
+      "state" : {
+        "branch" : "swift-concurrency",
+        "revision" : "3d40187c982346352d0adbe6b38e0e3d53fddc95"
+      }
+    },
+    {
+      "identity" : "schemata",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jordanekay/Schemata",
+      "state" : {
+        "branch" : "master",
+        "revision" : "1c5443b01cd2fb9f25e63197cfe35b96ba9bd2fc"
+      }
+    },
+    {
+      "identity" : "sociableweaver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/NicholasBellucci/SociableWeaver.git",
+      "state" : {
+        "revision" : "dd8368fcf1f8fef5d672ea64775dc6f7b02d7a92",
+        "version" : "0.1.12"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "0687f71944021d616d34d922343dcef086855920",
+        "version" : "600.0.1"
+      }
+    }
+  ],
+  "version" : 2
+}

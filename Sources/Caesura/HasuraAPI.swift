@@ -27,10 +27,10 @@ public extension HasuraAPI {
 	}
 
 	func fetch<Model: Catena.Model>(_ type: Model.Type, with id: Model.ID) async -> Self.Result<Model.ID?> {
-		await fetch(type, where: \.id == id).map(\.first)
+		await fetch(where: \Model.id == id).map(\.first)
 	}
 
-	func fetch<Model: Catena.Model>(_ type: Model.Type, where predicate: Predicate<Model>? = nil) async -> Self.Result<[Model.ID]> {
+	func fetch<Model: Catena.Model>(where predicate: Predicate<Model>? = nil) async -> Self.Result<[Model.ID]> {
 		await fetch(predicate, returning: IDFields<Model>.self).map { $0.map(\.id) }
 	}
 
@@ -59,12 +59,12 @@ public extension HasuraAPI {
 		await send(.update(.primaryKey(id), valueSet)).map(\.first!)
 	}
 
-	func delete<Model: Catena.Model>(_ type: Model.Type, where predicate: Predicate<Model>? = nil) async -> Self.Result<Void> {
-		await send(.delete(.predicate(predicate))).map { (fields: [IDFields<Model>]) in }
+    func delete<Model: Catena.Model>(_ type: Model.Type, where predicate: Predicate<Model>? = nil) async -> Self.Result<[Model.ID]> {
+        await send(.delete(.predicate(predicate))).map { (fields: [IDFields<Model>]) in fields.map(\.id) }
 	}
 
-	func delete<Model: Catena.Model>(_ type: Model.Type, with id: Model.ID) async -> Self.Result<Void> {
-		await send(.delete(.primaryKey(id))).map { (fields: [IDFields<Model>]) in }
+    func delete<Model: Catena.Model>(_ type: Model.Type, with id: Model.ID) async -> Self.Result<Model.ID?> {
+        await send(.delete(.primaryKey(id))).map { (fields: [IDFields<Model>]) in fields.first?.id }
 	}
 
 	func queryString<Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> String {

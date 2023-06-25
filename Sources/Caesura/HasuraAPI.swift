@@ -177,6 +177,8 @@ private extension String {
 		switch self {
 		case "==":
 			return "_eq"
+		case "NOT":
+			return "_not"
 		default:
 			return self
 		}

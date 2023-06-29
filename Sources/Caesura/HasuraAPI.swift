@@ -74,12 +74,14 @@ public extension HasuraAPI {
 private extension HasuraAPI {
 	func object<Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> Object {
 		let name = name(of: query)
-		let fields = Fields
-			.projection
-			.keyPaths
+		let keyPaths = Fields.projection.keyPaths
+		let paths = keyPaths
 			.map(Fields.Model.schema.properties)
 			.map { $0.map(\.path) }
-			.map { $0.objectWeavable(for: query) }
+			.filter{ !$0.isEmpty } + keyPaths.compactMap {
+				Fields.toManyKeys[$0]
+			}
+		let fields = paths.map { $0.objectWeavable(for: query) }
 		let base = Object(name) {
 			ForEachWeavable(
 				fields

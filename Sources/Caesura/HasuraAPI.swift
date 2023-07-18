@@ -11,19 +11,13 @@ public protocol HasuraAPI: GraphQLAPI, Storage {}
 // MARK: -
 public extension HasuraAPI {
 	func insert<Model: Catena.Model>(_ model: Model) async -> Self.Result<Model.ID> {
-		await insert(model, returning: IDFields<Model>.self).map(\.id)
-	}
-
-	func insert<Fields: Catena.Fields>(_ model: Fields.Model, returning fields: Fields.Type) async -> Self.Result<Fields> {
-		await send(.insert([model])).map(\.first!)
+		let fields: Self.Result<[IDFields<Model>]> = await send(.insert([model], many: false))
+		return fields.map(\.first!.id)
 	}
 
 	func insert<Model: Catena.Model>(_ models: [Model]) async -> Self.Result<[Model.ID]> {
-		await insert(models, returning: IDFields<Model>.self).map { $0.map(\.id) }
-	}
-
-	func insert<Fields: Catena.Fields>(_ models: [Fields.Model], returning fields: Fields.Type) async -> Self.Result<[Fields]> {
-		await send(.insert(models, many: true))
+		let fields: Self.Result<[IDFields<Model>]> = await send(.insert(models, many: true))
+		return fields.map { $0.map(\.id) }
 	}
 
 	func fetch<Model: Catena.Model>(where predicate: Predicate<Model>? = nil) async -> Self.Result<[Model.ID]> {
@@ -32,35 +26,36 @@ public extension HasuraAPI {
 
 	func fetch<Fields: Catena.Fields>(_ fields: Fields.Type, where predicate: Predicate<Fields.Model>? = nil) async -> Self.Result<[Fields]> {
 		var fetchPredicate = Fields.Model.all
-		if let predicate {
-			fetchPredicate = fetchPredicate.filter(predicate)
-		}
-
+		predicate.map { fetchPredicate = fetchPredicate.filter($0) }
 		return await send(fetchPredicate)
 	}
 
-	func update<Model: Catena.Model>(_ valueSet: ValueSet<Model>, where predicate: Predicate<Model>? = nil) async -> Self.Result<[Model.ID]> {
-		await update(valueSet, where: predicate, returning: IDFields<Model>.self).map { $0.map(\.id) }
-	}
-
-	func update<Fields: Catena.Fields>(_ valueSet: ValueSet<Fields.Model>, where predicate: Predicate<Fields.Model>? = nil, returning fields: Fields.Type) async -> Self.Result<[Fields]> {
-		await send(.update(.predicate(predicate), valueSet))
-	}
-
 	func update<Model: Catena.Model>(_ valueSet: ValueSet<Model>, with id: Model.ID) async -> Self.Result<Model.ID> {
-		await update(valueSet, with: id, returning: IDFields<Model>.self).map(\.id)
+		let fields: Self.Result<[IDFields<Model>]> = await send(.update(.primaryKey(id), valueSet))
+		return fields.map(\.first!.id)
 	}
 
-	func update<Fields: Catena.Fields>(_ valueSet: ValueSet<Fields.Model>, with id: Fields.Model.ID, returning fields: Fields.Type) async -> Self.Result<Fields> {
-		await send(.update(.primaryKey(id), valueSet)).map(\.first!)
-	}
-
-    func delete<Model: Catena.Model>(_ type: Model.Type, where predicate: Predicate<Model>? = nil) async -> Self.Result<[Model.ID]> {
-        await send(.delete(.predicate(predicate))).map { (fields: [IDFields<Model>]) in fields.map(\.id) }
+	func update<Model: Catena.Model>(_ valueSet: ValueSet<Model>, where predicate: Predicate<Model>?) async -> Self.Result<[Model.ID]> {
+		let fields: Self.Result<[IDFields<Model>]> = await send(.update(.predicate(predicate), valueSet))
+		return fields.map { $0.map(\.id) }
 	}
 
     func delete<Model: Catena.Model>(_ type: Model.Type, with id: Model.ID) async -> Self.Result<Model.ID?> {
-        await send(.delete(.primaryKey(id))).map { (fields: [IDFields<Model>]) in fields.first?.id }
+		await send(.delete(.primaryKey(id))).map { (fields: [IDFields<Model>]) in
+			fields.first?.id
+		}
+	}
+
+	func delete<Model: Catena.Model>(_ type: Model.Type, with ids: [Model.ID]) async -> Self.Result<[Model.ID]> {
+		let predicate: Predicate<Model> = ids.contains(Model.idKeyPath)
+		return await delete(type, where: predicate)
+	}
+
+
+	func delete<Model: Catena.Model>(_ type: Model.Type, where predicate: Predicate<Model>? = nil) async -> Self.Result<[Model.ID]> {
+		await send(.delete(.predicate(predicate))).map { (fields: [IDFields<Model>]) in
+			fields.map(\.id)
+		}
 	}
 
 	func queryString<Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> String {
@@ -181,6 +176,8 @@ private extension String {
 			return "_eq"
 		case "NOT":
 			return "_not"
+		case "IN":
+			return "_in"
 		default:
 			return self
 		}

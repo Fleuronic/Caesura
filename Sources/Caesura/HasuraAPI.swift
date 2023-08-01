@@ -207,7 +207,12 @@ private extension [String: Any] {
 	var named: Self {
 		.init(
 			uniqueKeysWithValues: map { key, value in
-				(key.operatorName, (value as? [String: Any])?.named ?? value)
+                let valueDictionary = value as? [String: Any]
+                if valueDictionary?.keys.first == "IS" {
+                    return ("_not", [key: [String: Any]()])
+                }
+
+				return (key.operatorName, valueDictionary?.named ?? value)
 			}
 		)
 	}

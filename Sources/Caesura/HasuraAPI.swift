@@ -16,6 +16,8 @@ public extension HasuraAPI {
 	}
 
 	func insert<Model: Catena.Model>(_ models: [Model]) async -> Self.Result<[Model.ID]> {
+		guard !models.isEmpty else { return .success([]) }
+		
 		let fields: Self.Result<[IDFields<Model>]> = await send(.insert(models, many: true))
 		return fields.map { $0.map(\.id) }
 	}

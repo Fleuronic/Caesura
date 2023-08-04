@@ -49,6 +49,8 @@ public extension HasuraAPI {
 	}
 
 	func delete<Model: Catena.Model>(_ type: Model.Type, with ids: [Model.ID]) async -> Self.Result<[Model.ID]> {
+		guard !ids.isEmpty else { return .success([]) }
+
 		let predicate: Predicate<Model> = ids.contains(Model.idKeyPath)
 		return await delete(type, where: predicate)
 	}

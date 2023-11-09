@@ -178,6 +178,14 @@ private extension String {
 		switch self {
 		case "==":
 			return "_eq"
+		case "<":
+			return "_lt"
+		case "<=":
+			return "_lte"
+		case ">":
+			return "_gt"
+		case ">=":
+			return "_gte"
 		case "NOT":
 			return "_not"
 		case "IN":

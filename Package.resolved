@@ -6,7 +6,7 @@
       "location" : "https://github.com/Fleuronic/Catena",
       "state" : {
         "branch" : "main",
-        "revision" : "8323ea025431d255506c292fff1c8ccd016cec57"
+        "revision" : "18672126bc29b99c51751d63b5299607bc6bd856"
       }
     },
     {
@@ -15,7 +15,7 @@
       "location" : "https://github.com/Fleuronic/Catenary",
       "state" : {
         "branch" : "main",
-        "revision" : "110fb9e750a901cd0b0b23ccd3af300209e33075"
+        "revision" : "f6ea9207438d6eeb7ad78d981b4af6b11e76dfc6"
       }
     },
     {
@@ -61,15 +61,6 @@
       "state" : {
         "branch" : "master",
         "revision" : "32be7bd5f65405678257aeee76859b03cffb89e7"
-      }
-    },
-    {
-      "identity" : "sociableweaver",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/NicholasBellucci/SociableWeaver.git",
-      "state" : {
-        "revision" : "dd8368fcf1f8fef5d672ea64775dc6f7b02d7a92",
-        "version" : "0.1.12"
       }
     }
   ],

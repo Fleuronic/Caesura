@@ -12,22 +12,14 @@ let package = Package(
     products: [
         .library(
             name: "Caesura",
-            targets: [
-				"Caesura"
-			]
+            targets: ["Caesura"]
 		)
     ],
-    dependencies: [
-        .package(url: "https://github.com/Fleuronic/Catenary", branch: "main"),
-        .package(url: "https://github.com/NicholasBellucci/SociableWeaver.git", from: "0.1.0")
-    ],
+    dependencies: [.package(url: "https://github.com/Fleuronic/Catenary", branch: "main")],
     targets: [
         .target(
             name: "Caesura",
-			dependencies: [
-				"Catenary",
-				"SociableWeaver"
-			]
+			dependencies: ["Catenary"]
 		)
     ]
 )

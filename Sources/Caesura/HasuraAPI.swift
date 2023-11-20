@@ -77,18 +77,14 @@ private extension HasuraAPI {
 		let paths = keyPaths
 			.map(Fields.Model.schema.properties)
 			.map { $0.map(\.path) }
-			.filter{ !$0.isEmpty } + keyPaths.compactMap {
-				Fields.toManyKeys[$0]
-			}
+			.filter{ !$0.isEmpty } + keyPaths.compactMap { Fields.toManyKeys[$0] }
 		let fields = paths.map { $0.objectWeavable(for: query) }
 		let base = Object(name) {
-			ForEachWeavable(
-				fields
-			) { $0 }
+			ForEachWeavable(fields) { $0 }
 		}
 
 		switch query {
-		case let .query(query):
+		case let .query(query, _):
 			return query
 				.predicates
 				.map(\.dictionary)

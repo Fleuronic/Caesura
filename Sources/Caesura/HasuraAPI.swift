@@ -26,6 +26,10 @@ public extension HasuraAPI {
 		await fetch(IDFields<Model>.self, where: predicate).map { $0.map(\.id) }
 	}
 
+	func fetch<Fields: Catena.Fields>(_ fields: Fields.Type, with id: Fields.Model.ID) async -> Self.Result<[Fields]> {
+		fetch(fields, where: Model.idKeyPath == id)
+	}
+
 	func fetch<Fields: Catena.Fields>(_ fields: Fields.Type, where predicate: Predicate<Fields.Model>? = nil) async -> Self.Result<[Fields]> {
 		var fetchPredicate = Fields.Model.all
 		predicate.map { fetchPredicate = fetchPredicate.filter($0) }

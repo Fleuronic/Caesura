@@ -27,7 +27,7 @@ public extension HasuraAPI {
 	}
 
 	func fetch<Fields: Catena.Fields>(_ fields: Fields.Type, with id: Fields.Model.ID) async -> Self.Result<[Fields]> {
-		fetch(fields, where: Model.idKeyPath == id)
+		await fetch(fields, where: \.id == id)
 	}
 
 	func fetch<Fields: Catena.Fields>(_ fields: Fields.Type, where predicate: Predicate<Fields.Model>? = nil) async -> Self.Result<[Fields]> {

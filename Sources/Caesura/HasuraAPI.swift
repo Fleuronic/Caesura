@@ -2,8 +2,8 @@
 
 import Catena
 import Catenary
-import Schemata
 import PersistDB
+import Schemata
 import SociableWeaver
 
 public protocol HasuraAPI: GraphQLAPI, Storage {}
@@ -17,7 +17,7 @@ public extension HasuraAPI {
 
 	func insert<Model: Catena.Model>(_ models: [Model]) async -> Self.Result<[Model.ID]> {
 		guard !models.isEmpty else { return .success([]) }
-		
+
 		let fields: Self.Result<[IDFields<Model>]> = await send(.insert(models, many: true))
 		return fields.map { $0.map(\.id) }
 	}
@@ -42,7 +42,7 @@ public extension HasuraAPI {
 		return fields.map { $0.map(\.id) }
 	}
 
-    func delete<Model: Catena.Model>(_ type: Model.Type, with id: Model.ID) async -> Self.Result<Model.ID?> {
+	func delete<Model: Catena.Model>(_ type: Model.Type, with id: Model.ID) async -> Self.Result<Model.ID?> {
 		await send(.delete(.primaryKey(id))).map { (fields: [IDFields<Model>]) in
 			fields.first?.id
 		}
@@ -54,7 +54,6 @@ public extension HasuraAPI {
 		let predicate: Predicate<Model> = ids.contains(Model.idKeyPath)
 		return await delete(type, where: predicate)
 	}
-
 
 	func delete<Model: Catena.Model>(_ type: Model.Type, where predicate: Predicate<Model>? = nil) async -> Self.Result<[Model.ID]> {
 		await send(.delete(.predicate(predicate))).map { (fields: [IDFields<Model>]) in
@@ -77,7 +76,7 @@ private extension HasuraAPI {
 		let paths = keyPaths
 			.map(Fields.Model.schema.properties)
 			.map { $0.map(\.path) }
-			.filter{ !$0.isEmpty } + keyPaths.compactMap { Fields.toManyKeys[$0] }
+			.filter { !$0.isEmpty } + keyPaths.compactMap { Fields.toManyKeys[$0] }
 		let fields = paths.map { $0.objectWeavable(for: query) }
 		let base = Object(name) {
 			ForEachWeavable(fields) { $0 }

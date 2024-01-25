@@ -10,6 +10,7 @@ public protocol HasuraAPI: GraphQLAPI, Storage {}
 
 // MARK: -
 public extension HasuraAPI {
+	// MARK: Storage
 	func insert<Model: Catena.Model>(_ model: Model) async -> Self.Result<Model.ID> {
 		let fields: Self.Result<[IDFields<Model>]> = await send(.insert([model], many: false))
 		return fields.map(\.first!.id)

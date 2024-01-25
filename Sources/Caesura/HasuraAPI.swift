@@ -80,9 +80,9 @@ private extension HasuraAPI {
 			ForEachWeavable(fields) { $0 }
 		}
 
-		switch query {
+		return switch query {
 		case let .query(query, _):
-			return query
+			query
 				.predicates
 				.map(\.dictionary)
 				.reduce(base) {
@@ -92,7 +92,7 @@ private extension HasuraAPI {
 					)
 				}
 		case let .mutation(mutation):
-			return arguments(for: mutation, returning: Fields.self)
+			arguments(for: mutation, returning: Fields.self)
 				.reduce(base) {
 					$0.argument(
 						key: $1.0,
@@ -122,26 +122,26 @@ private extension HasuraAPI {
 
 	func arguments<Fields: Catena.Fields>(for mutation: GraphQL.Query<Fields>.Mutation, returning fieldsType: Fields.Type) -> [String: ArgumentValueRepresentable] {
 		let empty: [String: ArgumentValueRepresentable] = [:]
-		switch mutation {
+		return switch mutation {
 		case let .insert(models, many):
 			if many {
-				return ["objects": models.map(\.identifiedValueSet.dictionary)]
+				["objects": models.map(\.identifiedValueSet.dictionary)]
 			} else {
-				return ["object": models.first!.identifiedValueSet.dictionary]
+				["object": models.first!.identifiedValueSet.dictionary]
 			}
 		case .update:
-			return [
+			[
 				"where": empty,
 				"_set": empty
 			]
 		case let .delete(selector):
 			switch selector {
 			case let .primaryKey(id):
-				return (\Fields.Model.id == id).dictionary.compactMapValues {
+				(\Fields.Model.id == id).dictionary.compactMapValues {
 					($0 as? [String: Any])?.values.first as? ArgumentValueRepresentable
 				}
 			case let .predicate(predicate):
-				return [
+				[
 					"where": predicate.map {
 						$0.dictionary.compactMapValues {
 							($0 as? [String: Any])?.named
@@ -169,22 +169,14 @@ private extension OperationType {
 private extension String {
 	var operatorName: String {
 		switch self {
-		case "==":
-			return "_eq"
-		case "<":
-			return "_lt"
-		case "<=":
-			return "_lte"
-		case ">":
-			return "_gt"
-		case ">=":
-			return "_gte"
-		case "NOT":
-			return "_not"
-		case "IN":
-			return "_in"
-		default:
-			return self
+		case "==": "_eq"
+		case "<": "_lt"
+		case "<=": "_lte"
+		case ">": "_gt"
+		case ">=": "_gte"
+		case "NOT": "_not"
+		case "IN": "_in"
+		default: self
 		}
 	}
 }
@@ -198,11 +190,11 @@ private extension [String] {
 			tail.objectWeavable(for: query)
 		}
 
-		switch query {
+		return switch query {
 		case .query, .mutation(.insert(_, false)), .mutation(.update(.primaryKey, _)), .mutation(.delete(.primaryKey)):
-			return weavable
+			weavable
 		default:
-			return Object("returning") { weavable }
+			Object("returning") { weavable }
 		}
 	}
 }

@@ -10,6 +10,13 @@ public protocol HasuraAPI: GraphQLAPI, Storage {}
 
 // MARK: -
 public extension HasuraAPI {
+	// MARK: GraphQLAPI
+	func queryString<Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> String {
+		Weave(.init(query)) {
+			object(for: query)
+		}.description
+	}
+
 	// MARK: Storage
 	func insert<Model: Catena.Model>(_ model: Model) async -> Self.Result<Model.ID> {
 		let fields: Self.Result<[IDFields<Model>]> = await send(.insert([model], many: false))
@@ -56,13 +63,6 @@ public extension HasuraAPI {
 		await send(.delete(.predicate(predicate))).map { (fields: [IDFields<Model>]) in
 			fields.map(\.id)
 		}
-	}
-
-	// MARK: GraphQLAPI
-	func queryString<Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> String {
-		Weave(.init(query)) {
-			object(for: query)
-		}.description
 	}
 }
 

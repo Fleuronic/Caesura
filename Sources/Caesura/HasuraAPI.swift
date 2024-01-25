@@ -22,14 +22,6 @@ public extension HasuraAPI {
 		return fields.map { $0.map(\.id) }
 	}
 
-	func fetch<Model: Catena.Model>(where predicate: Predicate<Model>? = nil) async -> Self.Result<[Model.ID]> {
-		await fetch(IDFields<Model>.self, where: predicate).map { $0.map(\.id) }
-	}
-
-	func fetch<Fields: Catena.Fields>(_ fields: Fields.Type, with id: Fields.Model.ID) async -> Self.Result<[Fields]> {
-		await fetch(fields, where: \.id == id)
-	}
-
 	func fetch<Fields: Catena.Fields>(_ fields: Fields.Type, where predicate: Predicate<Fields.Model>? = nil) async -> Self.Result<[Fields]> {
 		var fetchPredicate = Fields.Model.all
 		predicate.map { fetchPredicate = fetchPredicate.filter($0) }
@@ -65,6 +57,7 @@ public extension HasuraAPI {
 		}
 	}
 
+	// MARK: GraphQLAPI
 	func queryString<Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> String {
 		Weave(.init(query)) {
 			object(for: query)

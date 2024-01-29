@@ -36,9 +36,9 @@ public extension HasuraAPI {
 		return await send(fetchPredicate)
 	}
 
-	func update<Model: Catena.Model>(_ valueSet: ValueSet<Model>, with id: Model.ID) async -> Self.Result<Model.ID> {
+	func update<Model: Catena.Model>(_ valueSet: ValueSet<Model>, with id: Model.ID) async -> Self.Result<Model.ID?> {
 		let fields: Self.Result<[IDFields<Model>]> = await send(.update(.primaryKey(id), valueSet))
-		return fields.map(\.first!.id)
+		return fields.map(\.first?.id)
 	}
 
 	func update<Model: Catena.Model>(_ valueSet: ValueSet<Model>, where predicate: Predicate<Model>?) async -> Self.Result<[Model.ID]> {

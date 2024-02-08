@@ -11,7 +11,7 @@ public protocol HasuraAPI: GraphQLAPI, Storage {}
 // MARK: -
 public extension HasuraAPI {
 	// MARK: GraphQLAPI
-	func queryString<Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> String {
+	func queryString<Model: Catena.Model, Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> String where Model == Fields.Model {
 		Weave(.init(query)) {
 			object(for: query)
 		}.description
@@ -30,7 +30,7 @@ public extension HasuraAPI {
 		return fields.map { $0.map(\.id) }
 	}
 
-	func fetch<Fields: Catena.Fields>(_ fields: Fields.Type, where predicate: Predicate<Fields.Model>? = nil) async -> Self.Result<[Fields]> {
+	func fetch<Model: Catena.Model, Fields: Catena.Fields>(_ fields: Fields.Type, where predicate: Predicate<Fields.Model>? = nil) async -> Self.Result<[Fields]> where Model == Fields.Model {
 		var fetchPredicate = Fields.Model.all
 		predicate.map { fetchPredicate = fetchPredicate.filter($0) }
 		return await send(fetchPredicate)
@@ -68,7 +68,7 @@ public extension HasuraAPI {
 
 // MARK: -
 private extension HasuraAPI {
-	func object<Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> Object {
+	func object<Model: Catena.Model, Fields: Catena.Fields>(for query: GraphQL.Query<Fields>) -> Object where Model == Fields.Model {
 		let name = name(of: query)
 		let keyPaths = Fields.projection.keyPaths
 		let paths = keyPaths
@@ -120,7 +120,7 @@ private extension HasuraAPI {
 		}
 	}
 
-	func arguments<Fields: Catena.Fields>(for mutation: GraphQL.Query<Fields>.Mutation, returning fieldsType: Fields.Type) -> [String: ArgumentValueRepresentable] {
+	func arguments< Model: Catena.Model, Fields: Catena.Fields>(for mutation: GraphQL.Query<Fields>.Mutation, returning fieldsType: Fields.Type) -> [String: ArgumentValueRepresentable] where Model == Fields.Model {
 		let empty: [String: ArgumentValueRepresentable] = [:]
 		return switch mutation {
 		case let .insert(models, many):
@@ -137,7 +137,7 @@ private extension HasuraAPI {
 		case let .delete(selector):
 			switch selector {
 			case let .primaryKey(id):
-				(\Fields.Model.id == id).dictionary.compactMapValues {
+				(Fields.Model.idKeyPath == id).dictionary.compactMapValues {
 					($0 as? [String: Any])?.values.first as? ArgumentValueRepresentable
 				}
 			case let .predicate(predicate):

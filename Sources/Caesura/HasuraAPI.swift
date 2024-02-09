@@ -120,14 +120,18 @@ private extension HasuraAPI {
 		}
 	}
 
-	func arguments< Model: Catena.Model, Fields: Catena.Fields>(for mutation: GraphQL.Query<Fields>.Mutation, returning fieldsType: Fields.Type) -> [String: ArgumentValueRepresentable] where Model == Fields.Model {
+	func arguments<Model: Catena.Model, Fields: Catena.Fields>(for mutation: GraphQL.Query<Fields>.Mutation, returning fieldsType: Fields.Type) -> [String: ArgumentValueRepresentable] where Model == Fields.Model {
 		let empty: [String: ArgumentValueRepresentable] = [:]
+		let dictionary: (Model) -> [String: Any] = { model in
+			model.valueSet.update(with: [Model.idKeyPath == model.id]).dictionary
+		}
+
 		return switch mutation {
 		case let .insert(models, many):
 			if many {
-				["objects": models.map(\.identifiedValueSet.dictionary)]
+				["objects": models.map(dictionary)]
 			} else {
-				["object": models.first!.identifiedValueSet.dictionary]
+				["object": dictionary(models.first!)]
 			}
 		case .update:
 			[

@@ -1,17 +1,13 @@
 // Copyright © Fleuronic LLC. All rights reserved.
 
-import Papyrus
-import Schemata
-import PersistDB
 import Identity
+import PersistDB
 import struct Catena.IDFields
-import protocol Catena.Fields
 import protocol Catena.ResultProviding
 import protocol Catenary.API
 import protocol Catenary.Schematic
 import protocol Catenoid.Model
 import protocol Catenoid.Fields
-import protocol Catenoid.Storage
 
 public protocol API: Catenary.API, Schematic, ResultProviding, Storage {
     associatedtype Endpoint: Caesura.Endpoint
@@ -21,7 +17,7 @@ public protocol API: Catenary.API, Schematic, ResultProviding, Storage {
 
 // MARK: -
 public extension API where Error == StorageError {
-    func insert<Model: Catenoid.Model>(_ model: Model) async -> SingleResult<Model.ID> where Model.ID == Model.IdentifiedModel.ID, Model.IdentifiedModel.RawIdentifier: Codable {
+	func insert<Model: Catenoid.Model>(_ model: Model) async -> SingleResult<Model.ID> where Model.ID == Model.IdentifiedModel.ID,  Model.IdentifiedModel.RawIdentifier: Decodable {
         await result {
             try await endpoint.run(
                 Query<Self, IDFields<Model.IdentifiedModel>>(
@@ -32,7 +28,7 @@ public extension API where Error == StorageError {
         }
     }
 
-    func insert<Model: Catenoid.Model>(_ models: [Model]) async -> Results<Model.ID> where Model.ID == Model.IdentifiedModel.ID, Model.IdentifiedModel.RawIdentifier: Codable {
+	func insert<Model: Catenoid.Model>(_ models: [Model]) async -> Results<Model.ID> where Model.ID == Model.IdentifiedModel.ID,  Model.IdentifiedModel.RawIdentifier: Decodable {
         await result {
             try await endpoint.run(
                 Query<Self, IDFields<Model.IdentifiedModel>>(
@@ -54,7 +50,7 @@ public extension API where Error == StorageError {
         }
     }
 
-    func delete<Model: PersistDB.Model & Identifiable>(where predicate: Predicate<Model>?) async -> Results<Model.ID> where Model.RawIdentifier: Codable & Sendable {
+    func delete<Model: PersistDB.Model & Identifiable>(where predicate: Predicate<Model>?) async -> Results<Model.ID> where Model.RawIdentifier: Decodable {
         await result {
             try await endpoint.run(
                 Query<Self, IDFields<Model>>(

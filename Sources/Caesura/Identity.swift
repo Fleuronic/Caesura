@@ -6,7 +6,7 @@ import struct Catena.IDFields
 extension IDFields: Swift.Decodable where Model.ID: Decodable {
 	public init(from decoder: any Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
-		try self.init(id: container.decode(Model.ID.self, forKey: .id))
+		try self.init(id: container.decode(for: .id))
 	}
 }
 

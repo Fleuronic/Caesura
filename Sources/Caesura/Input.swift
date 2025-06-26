@@ -1,9 +1,8 @@
 // Copyright © Fleuronic LLC. All rights reserved.
 
-import struct PersistDB.ValueSet
-import protocol PersistDB.Model
-import protocol Schemata.ModelValue
-import protocol Identity.Identifiable
+import Schemata
+import PersistDB
+import Identity
 import protocol Catena.Valued
 import protocol Catenoid.Model
 

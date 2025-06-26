@@ -1,6 +1,5 @@
 // Copyright © Fleuronic LLC. All rights reserved.
 
-import Schemata
 import PersistDB
 import Identity
 import protocol Catena.Valued

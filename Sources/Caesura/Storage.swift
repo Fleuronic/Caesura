@@ -1,8 +1,6 @@
 // Copyright © Fleuronic LLC. All rights reserved.
 
-import Schemata
 import PersistDB
-
 import struct Identity.Identifier
 import protocol Identity.Identifiable
 import protocol Schemata.ModelProjection

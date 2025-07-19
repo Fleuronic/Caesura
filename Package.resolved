@@ -6,7 +6,7 @@
       "location" : "https://github.com/Fleuronic/Catena",
       "state" : {
         "branch" : "main",
-        "revision" : "681be25be987a63d858c6c952d239ed85a5c1b43"
+        "revision" : "e42054d1cffd0f3c7bc4e64898099ce6534a8bc6"
       }
     },
     {
@@ -15,7 +15,7 @@
       "location" : "https://github.com/Fleuronic/Catenary",
       "state" : {
         "branch" : "main",
-        "revision" : "1579207f71c850c5d296cf2bdb9660f18a785453"
+        "revision" : "224c53aee87e9e5ea444d0ed8844fbeed00ed5cc"
       }
     },
     {
@@ -24,7 +24,7 @@
       "location" : "https://github.com/Fleuronic/Catenoid",
       "state" : {
         "branch" : "main",
-        "revision" : "81a13203a8e6f1bb7228ea31bf32726ed5a999e1"
+        "revision" : "52333639ae306dab59c072c0c1c4a31d6eb6e418"
       }
     },
     {
@@ -42,7 +42,7 @@
       "location" : "https://github.com/jordanekay/Identity",
       "state" : {
         "branch" : "master",
-        "revision" : "8764a54c8e5ef0d14f3dc2ec5c10223ed0411a4d"
+        "revision" : "ff9dfdf4df87ff0d7064d40bdc230c5e55f0bcbf"
       }
     },
     {

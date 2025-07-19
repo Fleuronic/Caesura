@@ -1,12 +1,12 @@
 // Copyright © Fleuronic LLC. All rights reserved.
 
-import PersistDB
-import struct Identity.Identifier
-import protocol Identity.Identifiable
-import protocol Schemata.ModelProjection
 import protocol Catena.Fields
-import protocol Catenoid.Model
 import protocol Catenoid.Fields
+import protocol Catenoid.Model
+import protocol Identity.Identifiable
+import struct Identity.Identifier
+import PersistDB
+import protocol Schemata.ModelProjection
 
 public protocol Storage: Sendable {
 	associatedtype StorageError: Error
@@ -32,7 +32,9 @@ public extension Storage {
 		await fetch(where: ids.contains(Fields.Model.idKeyPath))
 	}
 
-	func delete<Model: PersistDB.Model & Identifiable>(_ type: Model.Type) async -> Result<[Model.ID], StorageError> where Model.RawIdentifier: Codable {
-		await delete(where: nil as Predicate<Model>?)
+	func delete<Model: PersistDB.Model & Identifiable>(_ type: Model.Type, with ids: [Model.ID]? = nil) async -> Result<[Model.ID], StorageError> where Model.RawIdentifier: Codable {
+		guard let ids else { return await delete(where: nil as Predicate<Model>?) }
+
+		return await delete(where: ids.contains(Model.idKeyPath))
 	}
 }

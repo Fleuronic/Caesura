@@ -1,12 +1,12 @@
 // Copyright © Fleuronic LLC. All rights reserved.
 
-import Identity
 import struct Catena.IDFields
+import Identity
 
 extension IDFields: Swift.Decodable where Model.ID: Decodable {
 	public init(from decoder: any Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
-		self.init(id: container.decode(for: .id))
+		try self.init(id: container.decode(Model.ID.self, forKey: .id))
 	}
 }
 

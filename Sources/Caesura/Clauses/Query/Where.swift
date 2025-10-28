@@ -29,6 +29,7 @@ private extension Where {
 					.replacingOccurrences(of: "<=", with: "_lte")
 					.replacingOccurrences(of: ">=", with: "_gte")
 					.replacingOccurrences(of: "AND", with: "_and")
+					.replacingOccurrences(of: "OR", with: "_or")
 				let queryValue = (value as? [String: Any]).map(prepared) ?? value
 
 				return (queryKey, queryValue)

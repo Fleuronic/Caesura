@@ -40,6 +40,19 @@ public extension API where Error == StorageError {
 		}
 	}
 
+	func update<Model: Catenoid.Model>(_ model: Model, with id: Model.ID) async -> SingleResult<Model.ID> where Model.ID == Model.IdentifiedModel.ID, Model.IdentifiedModel.RawIdentifier: Decodable {
+		await result {
+			try await endpoint.run(
+				Query<Self, IDFields<Model.IdentifiedModel>>(
+					name: { "update_\($0)" },
+					fieldsName: "returning",
+					set: .init(model.valueSet),
+					where: .init(Model.IdentifiedModel.idKeyPath == id)
+				)
+			).fields.first!.id
+		}
+	}
+
 	func fetch<Fields: Catenoid.Fields & Decodable>(where predicate: Predicate<Fields.Model>?) async -> Results<Fields> {
 		await result {
 			try await endpoint.run(

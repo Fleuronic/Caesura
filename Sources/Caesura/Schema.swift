@@ -5,7 +5,7 @@ import protocol Schemata.Model
 
 public extension Schema {
     init<each T: Model>(_ types: repeat (each T).Type)  {
-        var components: Set<Schema.Component> = []
+        var components: Swift.Set<Schema.Component> = []
         for type in repeat each types {
             components.formUnion(
                 type.schema.properties.map { keyPath, property in

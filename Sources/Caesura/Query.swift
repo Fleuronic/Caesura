@@ -10,8 +10,8 @@ import protocol Catenary.Clause
 import protocol Catenary.Schematic
 
 public struct Query<
-	Schematic: Catenary.Schematic,
-	Fields: ModelProjection
+    Schematic: Catenary.Schematic,
+    Fields: ModelProjection
 > where Fields.Model: Model {
     let name: ((String) -> String)?
     let fieldsName: String?
@@ -24,6 +24,7 @@ public struct Query<
         offset: Int? = nil,
         object: Object? = nil,
         objects: Objects? = nil,
+        set: Set? = nil,
         where: Where? = nil
     ) {
         self.name = name
@@ -33,6 +34,7 @@ public struct Query<
         `where`.map { argumentList.append($0) }
         object.map { argumentList.append($0) }
         objects.map { argumentList.append($0) }
+        set.map { argumentList.append($0) }
         limit.map { argumentList.append(Limit($0)) }
         offset.map { argumentList.append(Offset($0)) }
 
@@ -42,17 +44,17 @@ public struct Query<
 
 // MARK: -
 extension Query: Encodable {
-	public func encode(to encoder: any Encoder) throws {
-		let keyPaths = Fields.projection.keyPaths
-		let schemaName = Fields.Model.schemaName
-		let query = Catenary.Query<Schematic>(
-			name: name?(schemaName) ?? schemaName,
-			type: name == nil ? .query : .mutation,
-			argumentList: argumentList,
+    public func encode(to encoder: any Encoder) throws {
+        let keyPaths = Fields.projection.keyPaths
+        let schemaName = Fields.Model.schemaName
+        let query = Catenary.Query<Schematic>(
+            name: name?(schemaName) ?? schemaName,
+            type: name == nil ? .query : .mutation,
+            argumentList: argumentList,
             keyPaths: keyPaths,
-			fieldsName: fieldsName
-		)
+            fieldsName: fieldsName
+        )
 
         try query.encode(to: encoder)
-	}
+    }
 }

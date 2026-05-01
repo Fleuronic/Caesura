@@ -13,6 +13,7 @@ public protocol Storage: Sendable {
 
 	func insert<Model: Catenoid.Model>(_ model: Model) async -> Result<Model.ID, StorageError> where Model.ID == Model.IdentifiedModel.ID, Model.IdentifiedModel.RawIdentifier: Decodable
 	func insert<Model: Catenoid.Model>(_ models: [Model]) async -> Result<[Model.ID], StorageError> where Model.ID == Model.IdentifiedModel.ID, Model.IdentifiedModel.RawIdentifier: Decodable
+	func update<Model: Catenoid.Model>(_ model: Model, with id: Model.ID) async -> Result<Model.ID, StorageError> where Model.ID == Model.IdentifiedModel.ID, Model.IdentifiedModel.RawIdentifier: Decodable
 	func fetch<Fields: Catenoid.Fields & Decodable>(where predicate: Predicate<Fields.Model>?) async -> Result<[Fields], StorageError>
 	func delete<Model: PersistDB.Model & Identifiable>(where predicate: Predicate<Model>?) async -> Result<[Model.ID], StorageError> where Model.RawIdentifier: Decodable
 }
@@ -32,9 +33,10 @@ public extension Storage {
 		await fetch(where: ids.contains(Fields.Model.idKeyPath))
 	}
 
+	@discardableResult
 	func delete<Model: PersistDB.Model & Identifiable>(_ type: Model.Type, with ids: [Model.ID]? = nil) async -> Result<[Model.ID], StorageError> where Model.RawIdentifier: Codable {
 		guard let ids else { return await delete(where: nil as Predicate<Model>?) }
 
-		return await delete(where: ids.contains(Model.idKeyPath))
+		return ids.isEmpty ? .success([]) : await delete(where: ids.contains(Model.idKeyPath))
 	}
 }
